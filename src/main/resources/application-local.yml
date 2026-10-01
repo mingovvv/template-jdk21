@@ -1,0 +1,13 @@
+# 로컬 개발 전용. 프로파일 미지정 실행(bootRun, 테스트)에 적용됨(spring.profiles.default=local).
+logging:
+  level:
+    # 요청/응답 본문 로깅(RequestLoggingFilter DEBUG 모드). 로컬에서만 켬.
+    com.example.skeleton.common.filter.RequestLoggingFilter: debug
+    # 인증 문제를 추적할 때 주석 해제.
+    # org.springframework.security: debug
+
+# 로컬 프런트엔드 개발 서버에서 호출할 때 주석 해제. 출처는 스킴+호스트+포트가 정확히 일치해야 함.
+# skeleton:
+#   cors:
+#     allowed-origins:
+#       - http://localhost:3000

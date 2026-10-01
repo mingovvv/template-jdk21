@@ -1,0 +1,55 @@
+# 공통 설정. 프로파일별 값은 application-<profile>.yml에 둠(local이 기본 프로파일).
+spring:
+  application:
+    name: skeleton
+  profiles:
+    default: local
+  jpa:
+    hibernate:
+      # 스키마의 단일 원본은 schema.sql임. Hibernate가 DDL을 만들지 않음.
+      ddl-auto: none
+    open-in-view: false
+  messages:
+    # 요청 로케일의 번들이 없을 때 서버 OS 로케일이 아니라 기본 번들(영어)로 폴백함.
+    # 이 값이 true(기본값)면 한국어 서버에서 Accept-Language: en 요청이 한국어로 응답되는 사고가 남.
+    fallback-to-system-locale: false
+  mvc:
+    async:
+      # 비동기 요청(Callable, DeferredResult)이 결과를 기다리는 한도. 넘기면 503 SERVICE_UNAVAILABLE로 응답함.
+      # 지정하지 않으면 컨테이너 기본값(Tomcat 30초)을 따르므로 명시해 둠. SseEmitter는 생성자에서 따로 지정함.
+      request-timeout: 30s
+
+skeleton:
+  security:
+    jwt:
+      # HS256 개발용 시크릿(32바이트 이상). 로컬 외 환경에서는 반드시 JWT_SECRET으로 재정의.
+      secret: ${JWT_SECRET:skeleton-local-dev-secret-key-please-override}
+  request-id:
+    # 요청 ID를 주고받는 헤더 이름. 조직 표준이 다르면 변경(예: X-Correlation-Id). CORS 노출에도 자동 반영됨.
+    header: X-Request-Id
+    # 상류(게이트웨이 등)가 보낸 요청 ID 헤더 승계 여부. 신뢰할 수 있는 상류 뒤에 배포할 때만 true로 설정 (ADR 0004).
+    trust-incoming: false
+  cors:
+    # 기본은 허용 출처 없음(CORS 비활성). 브라우저 클라이언트가 붙는 프로파일에서만 출처를 명시함.
+    # 나머지 항목(methods/headers/exposed-headers/max-age)은 CorsProperties의 기본값을 따름.
+    allowed-origins: []
+
+# 어펜더 구성(콘솔/파일, 롤오버, 비동기)은 logback-spring.xml에 있음. 여기서는 값만 제어함.
+logging:
+  pattern:
+    # requestId(RequestMdcFilter)와 userId(AuthenticatedUserMdcFilter, 인증된 요청만)는 MDC로 모든 로그 라인에 붙음.
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %-5level [%thread] [%X{requestId:-}] [%X{userId:-}] %logger{40} : %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  swagger-ui:
+    operations-sorter: method

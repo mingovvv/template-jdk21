@@ -1,0 +1,20 @@
+# 운영 전용. logback-spring.xml의 prod 블록(롤링 파일 + 비동기)이 함께 활성화됨.
+logging:
+  level:
+    com.example.skeleton.common.filter.RequestLoggingFilter: info # 본문 로깅은 운영에서 금지
+  # 로그 수집기(Logstash/Loki 등)에 붙일 때 주석 해제. 콘솔 출력 전체가 JSON(MDC 포함)이 됨.
+  # structured:
+  #   format:
+  #     console: logstash
+
+# 프록시/LB 뒤에 배포하면 접근 로그의 ip가 프록시 IP로 찍힘.
+# 신뢰할 수 있는 프록시 뒤에서 실제 클라이언트 IP가 필요하면 주석 해제(X-Forwarded-For 신뢰).
+# server:
+#   forward-headers-strategy: framework
+
+# API 문서는 운영에 노출하지 않음.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

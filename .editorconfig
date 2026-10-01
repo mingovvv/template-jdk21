@@ -1,0 +1,17 @@
+# 에디터 공통 설정. 특히 *.properties — IntelliJ는 properties를 기본 ISO-8859-1로 취급하므로
+# UTF-8 명시가 없으면 messages_ko.properties의 한글이 에디터에서 깨져 보인다 (파일/런타임은 UTF-8로 정상).
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.properties]
+charset = utf-8
+
+# 포맷터(Spotless)를 두지 않으므로 IDE가 따르는 최소 레이아웃만 여기서 맞춘다 (ADR 0011)
+[*.java]
+indent_style = space
+indent_size = 4
+max_line_length = 160
